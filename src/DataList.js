@@ -7,6 +7,9 @@ import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.m
 import filterFactory, {textFilter} from "react-bootstrap-table2-filter";
 import 'react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css';
 import ToolkitProvider, { CSVExport } from "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faEdit, faTrash, faEye} from "@fortawesome/free-solid-svg-icons";
+// also install npm install @fontawesome/fontawesome-svg-core
 function DataList(){
     const [userList,setUserList] = useState([]);
     const { ExportCSVButton } = CSVExport;
@@ -21,10 +24,30 @@ function DataList(){
         )
     };
     const columns=[
-        {dataField:'id',text:'Id'},
+        {dataField:'id',text:'Id',formatter: (cell, row, rowIndex, formatExtraData) => {
+            return rowIndex + 1;
+          },},
         {dataField:'name',text:'Name', sort: true, filter: textFilter()},
         {dataField:'username',text:'Username', sort: true},
         {dataField:'email',text:'Email', sort: true},
+        {
+            dataField: 'link',
+            text: 'Action',
+            formatter: (rowContent,row) => {
+                return (
+                    <div>
+                        <CLink color="dark" href={`/#/masterkey/edit-tagapply/${ row.id }`} className="mr-2 mb-2" title="Edit" style={{ border: 'none', marginRight: '10px'}}>
+                            <FontAwesomeIcon icon={faEdit} color="darkblue" />
+                            
+                        </CLink>
+                        <button color="dark" className="mr-2 mb-2" title="Delete" style={{ border: 'none', marginRight: '10px'}} onClick={() => deleteOperation(row.id)}>
+                            <FontAwesomeIcon color="red" icon={faTrash} />
+                            
+                        </button>
+                    </div>
+                )
+            }
+        },
     ]
 
     const pagination = paginationFactory({
